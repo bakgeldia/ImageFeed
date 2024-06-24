@@ -93,7 +93,6 @@
                                             <outlet property="cellImage" destination="UHT-CC-7rY" id="k7u-28-IM0"/>
                                             <outlet property="dateLabel" destination="zZ7-qv-kLf" id="Yrx-ms-KQJ"/>
                                             <outlet property="likeButton" destination="sdE-8c-JJO" id="Chm-Pv-IJy"/>
-                                            <segue destination="9kB-sw-lnC" kind="show" id="V0M-Nl-nQn"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -115,6 +114,7 @@
                     <navigationItem key="navigationItem" id="i6F-6J-9Os"/>
                     <connections>
                         <outlet property="tableView" destination="0ZD-Gs-GgP" id="Fuw-16-5ad"/>
+                        <segue destination="9kB-sw-lnC" kind="show" identifier="ShowSingleImage" id="iLY-37-gHc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
