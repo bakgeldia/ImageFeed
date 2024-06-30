@@ -73,7 +73,7 @@ final class ProfileViewController: UIViewController {
             target: self,
             action: #selector(Self.didTapButton)
         )
-        button.tintColor = UIColor(red: 245, green: 107, blue: 108, alpha: 1)
+        button.tintColor = UIColor(red: 245.0/255.0, green: 107.0/255.0, blue: 108.0/255.0, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)
         button.widthAnchor.constraint(equalToConstant: 48).isActive = true
