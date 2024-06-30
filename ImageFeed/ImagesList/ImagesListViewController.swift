@@ -9,10 +9,11 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
 
+    // MARK: - IBOutlet
     @IBOutlet private var tableView: UITableView!
     
+    // MARK: - Private Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     
     private lazy var dateFormatter: DateFormatter = {

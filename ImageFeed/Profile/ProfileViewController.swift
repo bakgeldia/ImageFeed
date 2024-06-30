@@ -8,13 +8,15 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
+    
+    // MARK: - IBOutlet
     @IBOutlet private var avatarImageView: UIImageView!
     @IBOutlet private var nameLabel: UILabel!
     @IBOutlet private var loginNameLabel: UILabel!
     @IBOutlet private var descriptionLabel: UILabel!
     @IBOutlet private var logoutButton: UIButton!
     
-    
+    // MARK: - Public Properties
     var labelName: UILabel?
     var labelUsername: UILabel?
     var labelDescription: UILabel?
@@ -40,6 +42,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(name)
         name.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
         name.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8).isActive = true
+        name.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         self.labelName = name
         
         let username = UILabel()
@@ -50,9 +53,11 @@ final class ProfileViewController: UIViewController {
         view.addSubview(username)
         username.leadingAnchor.constraint(equalTo: name.leadingAnchor).isActive = true
         username.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 8).isActive = true
+        username.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         self.labelUsername = username
         
         let description = UILabel()
+        description.numberOfLines = 0
         description.text = "Hello, World!"
         description.textColor = .white
         description.font = UIFont.systemFont(ofSize: 13)
@@ -60,14 +65,15 @@ final class ProfileViewController: UIViewController {
         view.addSubview(description)
         description.leadingAnchor.constraint(equalTo: name.leadingAnchor).isActive = true
         description.topAnchor.constraint(equalTo: username.bottomAnchor, constant: 8).isActive = true
+        description.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         self.labelDescription = description
         
         let button = UIButton.systemButton(
-            with: UIImage(named: "logout")!,
+            with: UIImage(named: "Logout") ?? UIImage(),
             target: self,
             action: #selector(Self.didTapButton)
         )
-        button.tintColor = .red
+        button.tintColor = UIColor(red: 245, green: 107, blue: 108, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)
         button.widthAnchor.constraint(equalToConstant: 48).isActive = true
@@ -76,6 +82,12 @@ final class ProfileViewController: UIViewController {
         button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
     }
     
+    // MARK: - IBAction
+    @IBAction private func didTapLogoutButton() {
+        
+    }
+    
+    // MARK: - Private Methods
     @objc
     private func didTapButton() {
         labelName?.removeFromSuperview()
@@ -92,7 +104,4 @@ final class ProfileViewController: UIViewController {
         
     }
     
-    @IBAction private func didTapLogoutButton() {
-        
-    }
 }

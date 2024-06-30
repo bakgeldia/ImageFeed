@@ -136,18 +136,6 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAJ-Im-9va" userLabel="share_button">
-                                        <rect key="frame" x="182" y="829" width="50" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="PkE-6K-Exo"/>
-                                            <constraint firstAttribute="width" constant="50" id="YzZ-MU-Jj0"/>
-                                        </constraints>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" image="share_button"/>
-                                        <connections>
-                                            <action selector="didTapShareButton:" destination="9kB-sw-lnC" eventType="touchUpInside" id="qMq-Bk-Eet"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <viewLayoutGuide key="contentLayoutGuide" id="A6m-Fa-ymN"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="dwP-11-XS7"/>
@@ -155,14 +143,27 @@
                                     <outlet property="delegate" destination="9kB-sw-lnC" id="Osw-Rb-bUa"/>
                                 </connections>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAJ-Im-9va" userLabel="share_button">
+                                <rect key="frame" x="182" y="829" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="PkE-6K-Exo"/>
+                                    <constraint firstAttribute="width" constant="50" id="YzZ-MU-Jj0"/>
+                                </constraints>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="share_button"/>
+                                <connections>
+                                    <action selector="didTapShareButton:" destination="9kB-sw-lnC" eventType="touchUpInside" id="qMq-Bk-Eet"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNd-mo-d13" userLabel="back_button">
                                 <rect key="frame" x="8" y="8" width="48" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="TBA-IY-uu8"/>
                                     <constraint firstAttribute="height" constant="48" id="hmt-hf-Jj6"/>
                                 </constraints>
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="backward"/>
+                                <state key="normal" image="Backward"/>
                                 <connections>
                                     <action selector="didTapBackButton:" destination="9kB-sw-lnC" eventType="touchUpInside" id="rPg-ed-2El"/>
                                 </connections>
@@ -174,11 +175,11 @@
                             <constraint firstItem="TG1-vY-mZh" firstAttribute="trailing" secondItem="uGu-Kc-0Y8" secondAttribute="trailing" id="2qW-Vl-4Ue"/>
                             <constraint firstItem="uGu-Kc-0Y8" firstAttribute="top" secondItem="Z24-fd-bFj" secondAttribute="top" id="7l2-W0-ytD"/>
                             <constraint firstItem="uGu-Kc-0Y8" firstAttribute="leading" secondItem="TG1-vY-mZh" secondAttribute="leading" id="Ek5-o0-nqZ"/>
-                            <constraint firstItem="kAJ-Im-9va" firstAttribute="centerX" secondItem="TG1-vY-mZh" secondAttribute="centerX" id="JiX-NQ-WNk"/>
                             <constraint firstAttribute="bottom" secondItem="uGu-Kc-0Y8" secondAttribute="bottom" id="KQ8-e0-uqC"/>
                             <constraint firstItem="dNd-mo-d13" firstAttribute="leading" secondItem="TG1-vY-mZh" secondAttribute="leading" constant="8" id="Us1-W0-CNn"/>
+                            <constraint firstItem="kAJ-Im-9va" firstAttribute="centerX" secondItem="TG1-vY-mZh" secondAttribute="centerX" id="W0Z-1o-HPF"/>
                             <constraint firstItem="dNd-mo-d13" firstAttribute="top" secondItem="TG1-vY-mZh" secondAttribute="top" constant="8" id="XN4-g3-zRJ"/>
-                            <constraint firstItem="TG1-vY-mZh" firstAttribute="bottom" secondItem="kAJ-Im-9va" secondAttribute="bottom" constant="17" id="vFq-NH-Vwy"/>
+                            <constraint firstItem="TG1-vY-mZh" firstAttribute="bottom" secondItem="kAJ-Im-9va" secondAttribute="bottom" constant="17" id="agI-lk-Zao"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="FhJ-C4-5ex"/>
@@ -234,7 +235,7 @@
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
-        <image name="backward" width="24" height="24"/>
+        <image name="Backward" width="24" height="24"/>
         <image name="like_button_on" width="42" height="42"/>
         <image name="share_button" width="51" height="51"/>
         <image name="tab_editorial_active" width="30" height="30"/>
