@@ -144,7 +144,7 @@
                                 </connections>
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAJ-Im-9va" userLabel="share_button">
-                                <rect key="frame" x="182" y="829" width="50" height="50"/>
+                                <rect key="frame" x="182" y="830" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="PkE-6K-Exo"/>
                                     <constraint firstAttribute="width" constant="50" id="YzZ-MU-Jj0"/>
@@ -179,7 +179,7 @@
                             <constraint firstItem="dNd-mo-d13" firstAttribute="leading" secondItem="TG1-vY-mZh" secondAttribute="leading" constant="8" id="Us1-W0-CNn"/>
                             <constraint firstItem="kAJ-Im-9va" firstAttribute="centerX" secondItem="TG1-vY-mZh" secondAttribute="centerX" id="W0Z-1o-HPF"/>
                             <constraint firstItem="dNd-mo-d13" firstAttribute="top" secondItem="TG1-vY-mZh" secondAttribute="top" constant="8" id="XN4-g3-zRJ"/>
-                            <constraint firstItem="TG1-vY-mZh" firstAttribute="bottom" secondItem="kAJ-Im-9va" secondAttribute="bottom" constant="17" id="agI-lk-Zao"/>
+                            <constraint firstItem="TG1-vY-mZh" firstAttribute="bottom" secondItem="kAJ-Im-9va" secondAttribute="bottom" constant="16" id="agI-lk-Zao"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="FhJ-C4-5ex"/>
