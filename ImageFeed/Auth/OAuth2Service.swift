@@ -13,6 +13,8 @@ class OAuth2Service {
         case invalidJSON
     }
     
+    weak var delegate: AuthViewControllerDelegate?
+    
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let baseURL = URL(string: "https://unsplash.com") else {
             return nil
@@ -49,6 +51,8 @@ class OAuth2Service {
                     let response = try decoder.decode(OAuthTokenResponseBody.self, from: data)
                     let tokenStorage = OAuth2TokenStorage()
                     tokenStorage.token = response.access_token
+                    self.delegate?.didAuthenticate(AuthViewController())
+                    
                     completion(.success("\(response.access_token)"))
                 } catch {
                     print("Error decoding OAuthTokenResponseBody: \(error)")
