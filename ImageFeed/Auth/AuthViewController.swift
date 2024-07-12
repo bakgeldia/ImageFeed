@@ -62,19 +62,3 @@ extension AuthViewController: WebViewViewControllerDelegate {
         dismiss(animated: true)
     }
 }
-
-
-
-//case .success():
-//    self.delegate?.didAuthenticate(AuthViewController())
-//case .failure(let error):
-//    print("Authorization error: \(error)")
-
-
-//switch result {
-//case .success(let token):
-//    print("Access token: \(token)" )
-//    self.dismiss(animated: true)
-//case .failure(let error):
-//    print("Error fetching token: \(error)")
-//}

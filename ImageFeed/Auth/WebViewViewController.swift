@@ -23,6 +23,7 @@ final class WebViewViewController: UIViewController {
     
     enum WebViewConstants {
         static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+        static let unsplashAuthorizeURLPath = "/oauth/authorize/native"
     }
     
     override func viewDidLoad() {
@@ -108,7 +109,7 @@ extension WebViewViewController: WKNavigationDelegate {
         if
             let url = navigationAction.request.url,
             let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
+            urlComponents.path == WebViewConstants.unsplashAuthorizeURLPath,
             let items = urlComponents.queryItems,
             let codeItem = items.first(where: { $0.name == "code" })
         {
