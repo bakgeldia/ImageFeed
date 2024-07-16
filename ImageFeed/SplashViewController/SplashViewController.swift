@@ -19,7 +19,6 @@ final class SplashViewController: UIViewController {
         
         if let token = storage.token {
             fetchProfile(token)
-            //switchToTabBarController()
         } else {
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
@@ -61,8 +60,6 @@ extension SplashViewController: AuthViewControllerDelegate {
         
         guard let token = storage.token else { return }
         fetchProfile(token)
-        
-        //switchToTabBarController()
     }
     
     private func fetchProfile(_ token: String) {
@@ -73,7 +70,8 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             
             switch result {
-            case .success:
+            case .success(let result):
+                ProfileImageService.shared.fetchProfileImageURL(username: result.username) { _ in }
                 self.switchToTabBarController()
             case .failure(let error):
                 print("Error fetching profile: \(error)")

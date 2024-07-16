@@ -1,5 +1,5 @@
 //
-//  ProfileService.swift
+//  ProfileImageService.swift
 //  ImageFeed
 //
 //  Created by Bakgeldi Alkhabay on 16.07.2024.
@@ -7,12 +7,16 @@
 
 import UIKit
 
-final class ProfileService {
-    static let shared = ProfileService()
+final class ProfileImageService {
+    
+    static let shared = ProfileImageService()
+    private let tokenStorage = OAuth2TokenStorage()
+    private var task: URLSessionTask?
+    private var lastUsername: String?
     
     private init() {}
     
-    private(set) var profile: Profile?
+    private (set) var avatarURL: String?
     
     private enum AuthServiceError: Error {
         case invalidRequest
@@ -21,33 +25,33 @@ final class ProfileService {
     private enum NetworkError: Error {
         case invalidJSON
     }
+
     
-    private var task: URLSessionTask?
-    private let tokenStorage = OAuth2TokenStorage()
-    
-    func makeRequest(token: String) -> URLRequest?  {
-        guard let url = URL(string: "https://api.unsplash.com/me") else {
+    func makeRequest(username: String) -> URLRequest?  {
+        guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else {
             return nil
         }
         
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(tokenStorage.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
         return request
     }
     
-    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-        guard tokenStorage.token == token else {
+        guard lastUsername != username else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
         task?.cancel()
+        lastUsername = username
+
         
-        guard let request = makeRequest(token: token) else {
+        guard let request = makeRequest(username: username) else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
@@ -60,11 +64,11 @@ final class ProfileService {
             switch result {
             case .success(let data):
                 do {
-                    let response = try decoder.decode(ProfileResult.self, from: data)
-                    self.profile = Profile(username: response.username, name: response.name, loginName: "@\(response.username)", bio: response.bio ?? "No description")
-                    completion(.success(profile ?? Profile(username: "", name: "", loginName: "", bio: "")))
+                    let response = try decoder.decode(UserResult.self, from: data)
+                    self.avatarURL = response.profile_image.small
+                    completion(.success(self.avatarURL ?? ""))
                 } catch {
-                    print("Error decoding profile info: \(error)")
+                    print("Error decoding profile image: \(error)")
                     completion(.failure(NetworkError.invalidJSON))
                 }
             case .failure(let error):
@@ -78,17 +82,12 @@ final class ProfileService {
         self.task = task
         task.resume()
     }
+    
 }
 
-struct ProfileResult: Codable {
-    let username: String
-    let name: String
-    let bio: String?
-}
-
-struct Profile {
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String?
+struct UserResult: Codable {
+    struct ProfileImage: Codable {
+        let small: String
+    }
+    let profile_image: ProfileImage
 }
