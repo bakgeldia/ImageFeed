@@ -18,6 +18,7 @@
 		FCB6DA612C3D7CC500E3CA9F /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB6DA602C3D7CC500E3CA9F /* SplashViewController.swift */; };
 		FCB6DA642C46989800E3CA9F /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = FCB6DA632C46989800E3CA9F /* ProgressHUD */; };
 		FCB6DA662C46D01600E3CA9F /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB6DA652C46D01600E3CA9F /* UIBlockingProgressHUD.swift */; };
+		FCB6DA692C46D36E00E3CA9F /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB6DA682C46D36E00E3CA9F /* ProfileService.swift */; };
 		FCBE8DB02BEA46C80064EE96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE8DAF2BEA46C80064EE96 /* AppDelegate.swift */; };
 		FCBE8DB22BEA46C80064EE96 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE8DB12BEA46C80064EE96 /* SceneDelegate.swift */; };
 		FCBE8DB42BEA46C80064EE96 /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE8DB32BEA46C80064EE96 /* ImagesListViewController.swift */; };
@@ -39,6 +40,7 @@
 		FCB6DA5D2C3D6CE000E3CA9F /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		FCB6DA602C3D7CC500E3CA9F /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		FCB6DA652C46D01600E3CA9F /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
+		FCB6DA682C46D36E00E3CA9F /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		FCBE8DAC2BEA46C80064EE96 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCBE8DAF2BEA46C80064EE96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FCBE8DB12BEA46C80064EE96 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +94,14 @@
 			path = SplashViewController;
 			sourceTree = "<group>";
 		};
+		FCB6DA672C46D31D00E3CA9F /* UIBlocking */ = {
+			isa = PBXGroup;
+			children = (
+				FCB6DA652C46D01600E3CA9F /* UIBlockingProgressHUD.swift */,
+			);
+			path = UIBlocking;
+			sourceTree = "<group>";
+		};
 		FCBE8DA32BEA46C80064EE96 = {
 			isa = PBXGroup;
 			children = (
@@ -111,10 +121,10 @@
 		FCBE8DAE2BEA46C80064EE96 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				FCB6DA652C46D01600E3CA9F /* UIBlockingProgressHUD.swift */,
 				FCBE8DAF2BEA46C80064EE96 /* AppDelegate.swift */,
 				FCBE8DB12BEA46C80064EE96 /* SceneDelegate.swift */,
 				FCB6DA502C381F0100E3CA9F /* Constants.swift */,
+				FCB6DA672C46D31D00E3CA9F /* UIBlocking */,
 				FCB6DA5F2C3D7CAF00E3CA9F /* SplashViewController */,
 				FCB6DA522C3AB9C300E3CA9F /* Auth */,
 				FCF794EA2C0399BD00F67396 /* ImagesList */,
@@ -132,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				FCDD38E72C13282500AF4A2E /* ProfileViewController.swift */,
+				FCB6DA682C46D36E00E3CA9F /* ProfileService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -223,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCBE8DB42BEA46C80064EE96 /* ImagesListViewController.swift in Sources */,
+				FCB6DA692C46D36E00E3CA9F /* ProfileService.swift in Sources */,
 				FCF794E92C0399A400F67396 /* ImagesListCell.swift in Sources */,
 				FCB6DA5C2C3D6A4200E3CA9F /* OAuthTokenResponseBody.swift in Sources */,
 				FCDD38E82C13282500AF4A2E /* ProfileViewController.swift in Sources */,
