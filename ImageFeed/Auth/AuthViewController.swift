@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -46,11 +47,16 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         navigationController?.popViewController(animated: true)
         
-        OAuthService.fetchOAuthToken(code: code) { result in
+        ProgressHUD.animate()
+        OAuthService.fetchOAuthToken(code: code) { [weak self] result in
+            guard let self = self else { return }
+            
+            ProgressHUD.dismiss()
+            
             switch result {
             case .success(let token):
                 print(token)
-                self.delegate?.didAuthenticate(AuthViewController())
+                self.delegate?.didAuthenticate(self)
                 self.switchToTabBarController()
             case .failure(let error):
                 print("Error fetching token: \(error)")
