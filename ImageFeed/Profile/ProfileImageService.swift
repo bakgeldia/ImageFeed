@@ -57,25 +57,21 @@ final class ProfileImageService {
             return
         }
         
-        let decoder = JSONDecoder()
-        
-        let task = URLSession.shared.data(for: request) { [weak self] result in
+        let urlSession = URLSession.shared
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             guard let self = self else { return }
             
             switch result {
             case .success(let data):
                 do {
-                    let response = try decoder.decode(UserResult.self, from: data)
-                    self.avatarURL = response.profile_image.small
+                    self.avatarURL = data.profile_image.small
+                    print(data.profile_image.small)
                     completion(.success(self.avatarURL ?? ""))
                     NotificationCenter.default
                         .post(
                             name: ProfileImageService.didChangeNotification,
                             object: self,
-                            userInfo: ["URL": response.profile_image.small])
-                } catch {
-                    print("Error decoding profile image: \(error)")
-                    completion(.failure(NetworkError.invalidJSON))
+                            userInfo: ["URL": data.profile_image.small])
                 }
             case .failure(let error):
                 print("Network error occurred: \(error)")

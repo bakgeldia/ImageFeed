@@ -52,20 +52,15 @@ final class ProfileService {
             return
         }
         
-        let decoder = JSONDecoder()
-        
-        let task = URLSession.shared.data(for: request) { [weak self] result in
+        let urlSession = URLSession.shared
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             
             switch result {
             case .success(let data):
                 do {
-                    let response = try decoder.decode(ProfileResult.self, from: data)
-                    self.profile = Profile(username: response.username, name: response.name, loginName: "@\(response.username)", bio: response.bio ?? "No description")
-                    completion(.success(profile ?? Profile(username: "", name: "", loginName: "", bio: "")))
-                } catch {
-                    print("Error decoding profile info: \(error)")
-                    completion(.failure(NetworkError.invalidJSON))
+                    self.profile = Profile(username: data.username, name: data.name, loginName: "@\(data.username)", bio: data.bio ?? "No description")
+                    completion(.success(self.profile ?? Profile(username: "", name: "", loginName: "", bio: "")))
                 }
             case .failure(let error):
                 print("Network error occurred: \(error)")

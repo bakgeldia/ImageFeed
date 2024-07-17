@@ -19,6 +19,7 @@ final class OAuth2Service {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastCode: String?
+    private let tokenStorage = OAuth2TokenStorage()
     
     weak var delegate: AuthViewControllerDelegate?
     
@@ -60,29 +61,23 @@ final class OAuth2Service {
             return
         }
         
-        let decoder = JSONDecoder()
-        
-        let task = URLSession.shared.data(for: request) { [weak self] result in
+        let urlSession = URLSession.shared
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self = self else { return }
             switch result {
             case .success(let data):
                 do {
-                    let response = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-                    let tokenStorage = OAuth2TokenStorage()
-                    tokenStorage.token = response.access_token
-                    self?.delegate?.didAuthenticate(AuthViewController())
-                    
-                    completion(.success("\(response.access_token)"))
-                } catch {
-                    print("Error decoding OAuthTokenResponseBody: \(error)")
-                    completion(.failure(NetworkError.invalidJSON))
+                    self.tokenStorage.token = data.access_token
+                    self.delegate?.didAuthenticate(AuthViewController())
+                    completion(.success("\(data.access_token)"))
                 }
             case .failure(let error):
                 print("Network error occurred: \(error)")
                 completion(.failure(error))
             }
             
-            self?.task = nil
-            self?.lastCode = nil
+            self.task = nil
+            self.lastCode = nil
         }
         self.task = task
         task.resume()

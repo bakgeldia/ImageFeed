@@ -60,6 +60,14 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 self.switchToTabBarController()
             case .failure(let error):
                 print("Error fetching token: \(error)")
+                
+                let alertController = UIAlertController(title: "Что-то пошло не так(",
+                                                        message: "Не удалось войти в систему",
+                                                        preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                alertController.addAction(okAction)
+                
+                self.present(alertController, animated: true, completion: nil)
             }
         }
     }
