@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -21,6 +22,12 @@ final class ProfileViewController: UIViewController {
     var labelUsername: UILabel?
     var labelDescription: UILabel?
     var profileImageView: UIImageView?
+    
+    var imageView = UIImageView()
+    var name = UILabel()
+    var username = UILabel()
+    var profileDescription = UILabel()
+    var button = UIButton()
     
     private var profileService = ProfileService.shared
     private let tokenStorage = OAuth2TokenStorage()
@@ -69,12 +76,42 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateAvatar() {                                   // 8
-            guard
-                let profileImageURL = ProfileImageService.shared.avatarURL,
-                let url = URL(string: profileImageURL)
-            else { return }
-            // TODO [Sprint 11] Обновитe аватар, используя Kingfisher
-        }
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        // TODO [Sprint 11] Обновитe аватар, используя Kingfisher
+        
+        imageView.tintColor = .gray
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(imageView)
+        imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        self.profileImageView = imageView
+        
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 50)
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: url,
+                              placeholder: UIImage(named: "placeholder.jpeg"),
+                              options: [ .processor(processor)]
+                              ){ result in
+                                  switch result {
+                                  case .success(let value):
+                                      print(value.image)
+                                      print(value.cacheType)
+                                      print(value.source)
+                                  case .failure(let error):
+                                      print(error)
+                                  }
+                              }
+        
+    }
     
     private func updateProfileDetails(profile: Profile) {
         guard let token = tokenStorage.token else { return }
@@ -82,18 +119,6 @@ final class ProfileViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success:
-                let profileImage = UIImage(named: "ProfilePhoto")
-                let imageView = UIImageView(image: profileImage)
-                imageView.tintColor = .gray
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-                view.addSubview(imageView)
-                imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-                imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-                imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
-                imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
-                self.profileImageView = imageView
-                
-                let name = UILabel()
                 name.text = profile.name
                 name.textColor = .white
                 name.font = UIFont.systemFont(ofSize: 23)
@@ -104,7 +129,6 @@ final class ProfileViewController: UIViewController {
                 name.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
                 self.labelName = name
                 
-                let username = UILabel()
                 username.text = profile.loginName
                 username.textColor = .gray
                 username.font = UIFont.systemFont(ofSize: 13)
@@ -115,19 +139,18 @@ final class ProfileViewController: UIViewController {
                 username.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
                 self.labelUsername = username
                 
-                let description = UILabel()
-                description.numberOfLines = 0
-                description.text = profile.bio
-                description.textColor = .white
-                description.font = UIFont.systemFont(ofSize: 13)
-                description.translatesAutoresizingMaskIntoConstraints = false
-                view.addSubview(description)
-                description.leadingAnchor.constraint(equalTo: name.leadingAnchor).isActive = true
-                description.topAnchor.constraint(equalTo: username.bottomAnchor, constant: 8).isActive = true
-                description.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-                self.labelDescription = description
+                profileDescription.numberOfLines = 0
+                profileDescription.text = profile.bio
+                profileDescription.textColor = .white
+                profileDescription.font = UIFont.systemFont(ofSize: 13)
+                profileDescription.translatesAutoresizingMaskIntoConstraints = false
+                view.addSubview(profileDescription)
+                profileDescription.leadingAnchor.constraint(equalTo: name.leadingAnchor).isActive = true
+                profileDescription.topAnchor.constraint(equalTo: username.bottomAnchor, constant: 8).isActive = true
+                profileDescription.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+                self.labelDescription = profileDescription
                 
-                let button = UIButton.systemButton(
+                button = UIButton.systemButton(
                     with: UIImage(named: "Logout") ?? UIImage(),
                     target: self,
                     action: #selector(Self.didTapButton)
