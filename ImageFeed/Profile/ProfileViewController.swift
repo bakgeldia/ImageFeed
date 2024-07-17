@@ -29,6 +29,7 @@ final class ProfileViewController: UIViewController {
     var profileDescription = UILabel()
     var button = UIButton()
     
+    // MARK: - Provate Properties
     private var profileService = ProfileService.shared
     private let tokenStorage = OAuth2TokenStorage.shared
     

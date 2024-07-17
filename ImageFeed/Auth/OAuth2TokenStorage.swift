@@ -13,7 +13,7 @@ class OAuth2TokenStorage {
     
     private init() {}
     
-    private let tokenKey = "access_token_1"
+    private let tokenKey = "access_token_2"
     
 //    var token: String? {
 //        get {

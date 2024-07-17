@@ -9,6 +9,8 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     
+    var splashImage: UIImageView?
+    
     private let storage = OAuth2TokenStorage.shared
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let OAuthService = OAuth2Service()
@@ -17,11 +19,32 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        view.backgroundColor = UIColor(named: "ypBlack")
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "splash_screen_logo")
+        imageView.tintColor = .white
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(imageView)
+        imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 75).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 77).isActive = true
+        self.splashImage = imageView
+        
 //        if let token = storage.token {
         if let token = storage.getToken() {
             fetchProfile(token)
         } else {
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            //performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+                fatalError("AuthViewController is not found")
+            }
+            authViewController.delegate = self
+            authViewController.modalPresentationStyle = .fullScreen
+            
+            present(authViewController, animated: true, completion: nil)
         }
     }
     
@@ -39,22 +62,22 @@ final class SplashViewController: UIViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard
-                let navigationController = segue.destination as? UINavigationController,
-                let viewController = navigationController.viewControllers[0] as? AuthViewController
-            else {
-                assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
-                return
-            }
-            
-            viewController.delegate = self
-            
-        } else {
-            super.prepare(for: segue, sender: sender)
-           }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == showAuthenticationScreenSegueIdentifier {
+//            guard
+//                let navigationController = segue.destination as? UINavigationController,
+//                let viewController = navigationController.viewControllers[0] as? AuthViewController
+//            else {
+//                assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
+//                return
+//            }
+//            
+//            viewController.delegate = self
+//            
+//        } else {
+//            super.prepare(for: segue, sender: sender)
+//           }
+//    }
     
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
