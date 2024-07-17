@@ -40,10 +40,6 @@ final class ProfileService {
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-//        guard tokenStorage.token == token else {
-//            completion(.failure(AuthServiceError.invalidRequest))
-//            return
-//        }
         guard tokenStorage.getToken() == token else {
             completion(.failure(AuthServiceError.invalidRequest))
             return

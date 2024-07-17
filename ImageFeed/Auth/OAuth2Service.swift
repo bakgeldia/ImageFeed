@@ -67,9 +67,7 @@ final class OAuth2Service {
             switch result {
             case .success(let data):
                 do {
-                    //self.tokenStorage.token = data.access_token
                     self.tokenStorage.saveToken(data.access_token)
-                    //self.delegate?.didAuthenticate(AuthViewController())
                     completion(.success("\(data.access_token)"))
                 }
             case .failure(let error):
@@ -84,35 +82,3 @@ final class OAuth2Service {
         task.resume()
     }
 }
-
-
-//func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-//    guard let request = makeOAuthTokenRequest(code: code) else {
-//        completion(.failure(NetworkError.invalidURL))
-//        return
-//    }
-//    
-//    let decoder = JSONDecoder()
-//    
-//    let task = URLSession.shared.data(for: request) { result in
-//        switch result {
-//        case .success(let data):
-//            do {
-//                let response = try decoder.decode(OAuthTokenResponseBody.self, from: data)
-//                let tokenStorage = OAuth2TokenStorage()
-//                tokenStorage.token = response.access_token
-//                self.delegate?.didAuthenticate(AuthViewController())
-//                
-//                completion(.success("\(response.access_token)"))
-//            } catch {
-//                print("Error decoding OAuthTokenResponseBody: \(error)")
-//                completion(.failure(NetworkError.invalidJSON))
-//            }
-//        case .failure(let error):
-//            print("Network error occurred: \(error)")
-//            completion(.failure(error))
-//        }
-//    }
-//    
-//    task.resume()
-//}

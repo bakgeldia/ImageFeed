@@ -9,8 +9,10 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     
+    // MARK: - Public Properties
     var splashImage: UIImageView?
     
+    // MARK: - Private Properties
     private let storage = OAuth2TokenStorage.shared
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let OAuthService = OAuth2Service()
@@ -32,7 +34,6 @@ final class SplashViewController: UIViewController {
         imageView.heightAnchor.constraint(equalToConstant: 77).isActive = true
         self.splashImage = imageView
         
-//        if let token = storage.token {
         if let token = storage.getToken() {
             fetchProfile(token)
         } else {
@@ -48,6 +49,7 @@ final class SplashViewController: UIViewController {
         }
     }
     
+    // MARK: - Private Functions
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -62,27 +64,10 @@ final class SplashViewController: UIViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-//            guard
-//                let navigationController = segue.destination as? UINavigationController,
-//                let viewController = navigationController.viewControllers[0] as? AuthViewController
-//            else {
-//                assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
-//                return
-//            }
-//            
-//            viewController.delegate = self
-//            
-//        } else {
-//            super.prepare(for: segue, sender: sender)
-//           }
-//    }
     
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
         
-//        guard let token = storage.token else { return }
         guard let token = storage.getToken() else { return }
         fetchProfile(token)
     }

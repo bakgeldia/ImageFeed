@@ -13,20 +13,7 @@ class OAuth2TokenStorage {
     
     private init() {}
     
-    private let tokenKey = "access_token_2"
-    
-//    var token: String? {
-//        get {
-//            return UserDefaults.standard.string(forKey: tokenKey)
-//        }
-//        set {
-//            if let newToken = newValue {
-//                UserDefaults.standard.set(newToken, forKey: tokenKey)
-//            } else {
-//                UserDefaults.standard.removeObject(forKey: tokenKey)
-//            }
-//        }
-//    }
+    private let tokenKey = "access_token_8"
     
     func saveToken(_ token: String){
         let isSuccess = KeychainWrapper.standard.set(token, forKey: tokenKey)
@@ -46,18 +33,4 @@ class OAuth2TokenStorage {
             print("Error: Failed to delete the token from the Keychain")
         }
     }
-    
-//    var token: String? {
-//        get {
-//            return KeychainWrapper.standard.string(forKey: tokenKey)
-//        }
-//        set {
-//            if let newToken = newValue {
-//                let isSuccess = KeychainWrapper.standard.set(newToken, forKey: tokenKey)
-//                if !isSuccess { print("Error: Failed to save the token in the keychain") }
-//            } else {
-//                KeychainWrapper.standard.removeObject(forKey: tokenKey)
-//            }
-//        }
-//    }
 }

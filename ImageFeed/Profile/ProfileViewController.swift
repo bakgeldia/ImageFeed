@@ -50,10 +50,9 @@ final class ProfileViewController: UIViewController {
                 self.updateAvatar()
             }
         
-        updateAvatar()
-        
         guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
+        updateAvatar()
     }
     
     // MARK: - IBAction
@@ -86,7 +85,7 @@ final class ProfileViewController: UIViewController {
         imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        self.profileImageView = imageView
+        
         
         name.textColor = .white
         name.font = UIFont.systemFont(ofSize: 23)
@@ -130,12 +129,11 @@ final class ProfileViewController: UIViewController {
         button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
     }
     
-    private func updateAvatar() {                                   // 8
+    private func updateAvatar() {
         guard
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
-        
         let cache = ImageCache.default
         cache.clearMemoryCache()
         cache.clearDiskCache()
@@ -145,20 +143,20 @@ final class ProfileViewController: UIViewController {
         imageView.kf.setImage(with: url,
                               placeholder: UIImage(named: "placeholder"),
                               options: [ .processor(processor)]
-                              ){ result in
-                                  switch result {
-                                  case .success(let value):
-                                      print(value.image)
-                                      print(value.cacheType)
-                                      print(value.source)
-                                  case .failure(let error):
-                                      print(error)
-                                  }
-                              }
+        ){ result in
+            switch result {
+            case .success(let value):
+                print(value.image)
+                print(value.cacheType)
+                print(value.source)
+            case .failure(let error):
+                print(error)
+            }
+        }
+        self.profileImageView = imageView
     }
     
     private func updateProfileDetails(profile: Profile) {
-//        guard let token = tokenStorage.token else { return }
         guard let token = tokenStorage.getToken() else { return }
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
