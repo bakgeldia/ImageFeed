@@ -23,7 +23,7 @@ final class ProfileService {
     }
     
     private var task: URLSessionTask?
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
     
     func makeRequest(token: String) -> URLRequest?  {
         guard let url = URL(string: "https://api.unsplash.com/me") else {
@@ -40,7 +40,11 @@ final class ProfileService {
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-        guard tokenStorage.token == token else {
+//        guard tokenStorage.token == token else {
+//            completion(.failure(AuthServiceError.invalidRequest))
+//            return
+//        }
+        guard tokenStorage.getToken() == token else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }

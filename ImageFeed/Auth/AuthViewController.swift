@@ -54,8 +54,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             UIBlockingProgressHUD.dismiss()
             
             switch result {
-            case .success(let token):
-                print(token)
+            case .success:
                 self.delegate?.didAuthenticate(self)
                 self.switchToTabBarController()
             case .failure(let error):

@@ -30,7 +30,7 @@ final class ProfileViewController: UIViewController {
     var button = UIButton()
     
     private var profileService = ProfileService.shared
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -80,7 +80,6 @@ final class ProfileViewController: UIViewController {
             let profileImageURL = ProfileImageService.shared.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
-        // TODO [Sprint 11] Обновитe аватар, используя Kingfisher
         
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -114,7 +113,8 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateProfileDetails(profile: Profile) {
-        guard let token = tokenStorage.token else { return }
+//        guard let token = tokenStorage.token else { return }
+        guard let token = tokenStorage.getToken() else { return }
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -170,62 +170,3 @@ final class ProfileViewController: UIViewController {
     }
     
 }
-
-
-//        let profileImage = UIImage(named: "ProfilePhoto")
-//        let imageView = UIImageView(image: profileImage)
-//        imageView.tintColor = .gray
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(imageView)
-//        imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-//        imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-//        imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
-//        imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
-//        self.profileImageView = imageView
-//
-//        let name = UILabel()
-//        name.text = "Екатерина Новикова"
-//        name.textColor = .white
-//        name.font = UIFont.systemFont(ofSize: 23)
-//        name.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(name)
-//        name.leadingAnchor.constraint(equalTo: imageView.leadingAnchor).isActive = true
-//        name.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8).isActive = true
-//        name.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-//        self.labelName = name
-//
-//        let username = UILabel()
-//        username.text = "@ekaterina_nov"
-//        username.textColor = .gray
-//        username.font = UIFont.systemFont(ofSize: 13)
-//        username.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(username)
-//        username.leadingAnchor.constraint(equalTo: name.leadingAnchor).isActive = true
-//        username.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 8).isActive = true
-//        username.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-//        self.labelUsername = username
-//
-//        let description = UILabel()
-//        description.numberOfLines = 0
-//        description.text = "Hello, World!"
-//        description.textColor = .white
-//        description.font = UIFont.systemFont(ofSize: 13)
-//        description.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(description)
-//        description.leadingAnchor.constraint(equalTo: name.leadingAnchor).isActive = true
-//        description.topAnchor.constraint(equalTo: username.bottomAnchor, constant: 8).isActive = true
-//        description.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-//        self.labelDescription = description
-//
-//        let button = UIButton.systemButton(
-//            with: UIImage(named: "Logout") ?? UIImage(),
-//            target: self,
-//            action: #selector(Self.didTapButton)
-//        )
-//        button.tintColor = UIColor(red: 245.0/255.0, green: 107.0/255.0, blue: 108.0/255.0, alpha: 1)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(button)
-//        button.widthAnchor.constraint(equalToConstant: 48).isActive = true
-//        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
-//        button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
-//        button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true

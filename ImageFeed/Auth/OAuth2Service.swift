@@ -19,7 +19,7 @@ final class OAuth2Service {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastCode: String?
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
     
     weak var delegate: AuthViewControllerDelegate?
     
@@ -67,8 +67,9 @@ final class OAuth2Service {
             switch result {
             case .success(let data):
                 do {
-                    self.tokenStorage.token = data.access_token
-                    self.delegate?.didAuthenticate(AuthViewController())
+                    //self.tokenStorage.token = data.access_token
+                    self.tokenStorage.saveToken(data.access_token)
+                    //self.delegate?.didAuthenticate(AuthViewController())
                     completion(.success("\(data.access_token)"))
                 }
             case .failure(let error):

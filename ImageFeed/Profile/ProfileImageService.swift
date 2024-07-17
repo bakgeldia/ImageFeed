@@ -11,7 +11,7 @@ final class ProfileImageService {
     
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
-    private let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
     private var lastUsername: String?
     
@@ -34,7 +34,8 @@ final class ProfileImageService {
         }
         
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(tokenStorage.token ?? "")", forHTTPHeaderField: "Authorization")
+        //request.setValue("Bearer \(tokenStorage.token ?? "")", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(tokenStorage.getToken() ?? "")", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
         return request
@@ -65,7 +66,6 @@ final class ProfileImageService {
             case .success(let data):
                 do {
                     self.avatarURL = data.profile_image.small
-                    print(data.profile_image.small)
                     completion(.success(self.avatarURL ?? ""))
                     NotificationCenter.default
                         .post(
