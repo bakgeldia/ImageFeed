@@ -12,8 +12,6 @@ final class ProfileService {
     
     private init() {}
     
-    //private(set) var profile: Profile?
-    
     private enum ProfileServiceErrors: Error {
         case invalidRequest
     }
