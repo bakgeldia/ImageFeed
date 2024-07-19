@@ -43,7 +43,7 @@ final class ProfileService {
         task?.cancel()
         
         guard let request = makeRequest(token: token) else {
-            print("[ProfileService: fetchProfile]: Invalid request")
+            print("[ProfileService: fetchProfile]: Error while creating request")
             completion(.failure(ProfileServiceErrors.invalidRequest))
             return
         }
