@@ -13,22 +13,16 @@ final class ProfileImageService {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     private let tokenStorage = OAuth2TokenStorage.shared
     private var task: URLSessionTask?
-    private var lastUsername: String?
     
     private init() {}
     
     private (set) var avatarURL: String?
     
-    private enum AuthServiceError: Error {
+    private enum ProfileImageServiceErrors: Error {
         case invalidRequest
     }
     
-    private enum NetworkError: Error {
-        case invalidJSON
-    }
-
-    
-    func makeRequest(username: String) -> URLRequest?  {
+    private func makeRequest(username: String) -> URLRequest?  {
         guard let url = URL(string: "https://api.unsplash.com/users/\(username)") else {
             return nil
         }
@@ -43,17 +37,11 @@ final class ProfileImageService {
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-        guard lastUsername != username else {
-            completion(.failure(AuthServiceError.invalidRequest))
-            return
-        }
-        
         task?.cancel()
-        lastUsername = username
-
         
         guard let request = makeRequest(username: username) else {
-            completion(.failure(AuthServiceError.invalidRequest))
+            print("[ProfileImageService: fetchProfileImageURL]: Error while creating request")
+            completion(.failure(ProfileImageServiceErrors.invalidRequest))
             return
         }
         
@@ -73,7 +61,7 @@ final class ProfileImageService {
                             userInfo: ["URL": data.profile_image.small])
                 }
             case .failure(let error):
-                print("Network error occurred: \(error)")
+                print("[ProfileImageService: fetchProfileImageURL]: Network error - \(error)")
                 completion(.failure(error))
             }
             
@@ -84,11 +72,4 @@ final class ProfileImageService {
         task.resume()
     }
     
-}
-
-struct UserResult: Codable {
-    struct ProfileImage: Codable {
-        let small: String
-    }
-    let profile_image: ProfileImage
 }

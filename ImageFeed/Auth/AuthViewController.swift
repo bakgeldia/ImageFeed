@@ -14,17 +14,17 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     // MARK: - Private Properties
-    private let ShowWebViewSegueIdentifier = "ShowWebView"
-    private let OAuthService = OAuth2Service()
+    private let showWebViewSegueIdentifier = "ShowWebView"
+    private let oAuthService = OAuth2Service.shared
     
     // MARK: - Public Properties
     weak var delegate: AuthViewControllerDelegate?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == ShowWebViewSegueIdentifier {
+        if segue.identifier == showWebViewSegueIdentifier {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
-            else { fatalError("Failed to prepare for \(ShowWebViewSegueIdentifier)") }
+            else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
@@ -49,7 +49,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
         navigationController?.popViewController(animated: true)
         
         UIBlockingProgressHUD.show()
-        OAuthService.fetchOAuthToken(code: code) { [weak self] result in
+        oAuthService.fetchOAuthToken(code: code) { [weak self] result in
             guard let self = self else { return }
             
             UIBlockingProgressHUD.dismiss()
@@ -57,16 +57,20 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
-                self.switchToTabBarController()
             case .failure(let error):
-                print("Error fetching token: \(error)")
+                let alertController = UIAlertController(
+                    title: "Что-то пошло не так(",
+                    message: "Не удалось войти в систему",
+                    preferredStyle: .alert
+                )
                 
-                let alertController = UIAlertController(title: "Что-то пошло не так(",
-                                                        message: "Не удалось войти в систему",
-                                                        preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                let okAction = UIAlertAction(
+                    title: "Ok",
+                    style: .default,
+                    handler: nil
+                )
+                
                 alertController.addAction(okAction)
-                
                 self.present(alertController, animated: true, completion: nil)
             }
         }

@@ -17,19 +17,18 @@ final class ProfileViewController: UIViewController {
     @IBOutlet private var descriptionLabel: UILabel!
     @IBOutlet private var logoutButton: UIButton!
     
-    // MARK: - Public Properties
-    var labelName: UILabel?
-    var labelUsername: UILabel?
-    var labelDescription: UILabel?
-    var profileImageView: UIImageView?
+    // MARK: - Private Properties
+    private var labelName: UILabel?
+    private var labelUsername: UILabel?
+    private var labelDescription: UILabel?
+    private var profileImageView: UIImageView?
     
-    var imageView = UIImageView()
-    var name = UILabel()
-    var username = UILabel()
-    var profileDescription = UILabel()
-    var button = UIButton()
+    private var imageView = UIImageView()
+    private var name = UILabel()
+    private var username = UILabel()
+    private var profileDescription = UILabel()
+    private var button = UIButton()
     
-    // MARK: - Provate Properties
     private var profileService = ProfileService.shared
     private let tokenStorage = OAuth2TokenStorage.shared
     
@@ -50,14 +49,13 @@ final class ProfileViewController: UIViewController {
                 self.updateAvatar()
             }
         
-        guard let profile = profileService.profile else { return }
-        updateProfileDetails(profile: profile)
+        updateProfileDetails()
         updateAvatar()
     }
     
     // MARK: - IBAction
     @IBAction private func didTapLogoutButton() {
-        
+        //TODO: Need to write
     }
     
     // MARK: - Private Methods
@@ -143,29 +141,18 @@ final class ProfileViewController: UIViewController {
         imageView.kf.setImage(with: url,
                               placeholder: UIImage(named: "placeholder"),
                               options: [ .processor(processor)]
-        ){ result in
-            switch result {
-            case .success(let value):
-                print(value.image)
-                print(value.cacheType)
-                print(value.source)
-            case .failure(let error):
-                print(error)
-            }
-        }
+        )
         self.profileImageView = imageView
     }
     
-    private func updateProfileDetails(profile: Profile) {
+    private func updateProfileDetails() {
         guard let token = tokenStorage.getToken() else { return }
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
+            case .success(let profile):
                 name.text = profile.name
-                
                 username.text = profile.loginName
-
                 profileDescription.text = profile.bio
 
             case .failure(let error):

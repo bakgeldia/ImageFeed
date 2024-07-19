@@ -12,14 +12,10 @@ final class ProfileService {
     
     private init() {}
     
-    private(set) var profile: Profile?
+    //private(set) var profile: Profile?
     
-    private enum AuthServiceError: Error {
+    private enum ProfileServiceErrors: Error {
         case invalidRequest
-    }
-    
-    private enum NetworkError: Error {
-        case invalidJSON
     }
     
     private var task: URLSessionTask?
@@ -41,14 +37,16 @@ final class ProfileService {
         assert(Thread.isMainThread)
         
         guard tokenStorage.getToken() == token else {
-            completion(.failure(AuthServiceError.invalidRequest))
+            print("[ProfileService: fetchProfile]: Invalid request")
+            completion(.failure(ProfileServiceErrors.invalidRequest))
             return
         }
         
         task?.cancel()
         
         guard let request = makeRequest(token: token) else {
-            completion(.failure(AuthServiceError.invalidRequest))
+            print("[ProfileService: fetchProfile]: Invalid request")
+            completion(.failure(ProfileServiceErrors.invalidRequest))
             return
         }
         
@@ -59,11 +57,17 @@ final class ProfileService {
             switch result {
             case .success(let data):
                 do {
-                    self.profile = Profile(username: data.username, name: data.name, loginName: "@\(data.username)", bio: data.bio ?? "No description")
-                    completion(.success(self.profile ?? Profile(username: "", name: "", loginName: "", bio: "")))
+                    let profile = Profile(
+                        username: data.username,
+                        name: data.name,
+                        loginName: "@\(data.username)",
+                        bio: data.bio ?? "No description"
+                    )
+                    
+                    completion(.success(profile))
                 }
             case .failure(let error):
-                print("Network error occurred: \(error)")
+                print("[ProfileService: fetchProfile]: Network error - \(error)")
                 completion(.failure(error))
             }
             
@@ -73,17 +77,4 @@ final class ProfileService {
         self.task = task
         task.resume()
     }
-}
-
-struct ProfileResult: Codable {
-    let username: String
-    let name: String
-    let bio: String?
-}
-
-struct Profile {
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String?
 }

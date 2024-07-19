@@ -8,19 +8,15 @@
 import UIKit
 import SwiftKeychainWrapper
 
-class OAuth2TokenStorage {
+final class OAuth2TokenStorage {
     static let shared =  OAuth2TokenStorage()
     
     private init() {}
     
-    private let tokenKey = "access_token_8"
+    private let tokenKey = "access_token_11"
     
     func saveToken(_ token: String){
-        let isSuccess = KeychainWrapper.standard.set(token, forKey: tokenKey)
-        guard isSuccess else {
-            print("Error: Failed to save the token in the keychain")
-            return
-        }
+        KeychainWrapper.standard.set(token, forKey: tokenKey)
     }
     
     func getToken() -> String? {
@@ -28,9 +24,6 @@ class OAuth2TokenStorage {
     }
     
     func deleteToken() {
-        let removeSuccessful = KeychainWrapper.standard.removeObject(forKey: tokenKey)
-        if !removeSuccessful {
-            print("Error: Failed to delete the token from the Keychain")
-        }
+        KeychainWrapper.standard.removeObject(forKey: tokenKey)
     }
 }

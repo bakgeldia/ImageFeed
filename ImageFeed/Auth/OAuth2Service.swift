@@ -8,13 +8,13 @@
 import UIKit
 
 final class OAuth2Service {
-    private enum NetworkError: Error {
-        case invalidJSON
-    }
-    
-    private enum AuthServiceError: Error {
+    private enum OAuthServiceError: Error {
         case invalidRequest
     }
+    
+    static let shared = OAuth2Service()
+    
+    private init() {}
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
@@ -23,7 +23,7 @@ final class OAuth2Service {
     
     weak var delegate: AuthViewControllerDelegate?
     
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let baseURL = URL(string: "https://unsplash.com") else {
             return nil
         }
@@ -49,7 +49,8 @@ final class OAuth2Service {
         assert(Thread.isMainThread)
         
         guard lastCode != code else {
-            completion(.failure(AuthServiceError.invalidRequest))
+            print("[OAuth2Service: fetchOAuthToken]: Invalid request")
+            completion(.failure(OAuthServiceError.invalidRequest))
             return
         }
         
@@ -57,7 +58,8 @@ final class OAuth2Service {
         lastCode = code
         
         guard let request = makeOAuthTokenRequest(code: code) else {
-            completion(.failure(AuthServiceError.invalidRequest))
+            print("[OAuth2Service: fetchOAuthToken]: Invalid request")
+            completion(.failure(OAuthServiceError.invalidRequest))
             return
         }
         
@@ -71,7 +73,7 @@ final class OAuth2Service {
                     completion(.success("\(data.access_token)"))
                 }
             case .failure(let error):
-                print("Network error occurred: \(error)")
+                print("[OAuth2Service: fetchOAuthToken]: Network error - \(error)")
                 completion(.failure(error))
             }
             

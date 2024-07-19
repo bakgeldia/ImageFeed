@@ -15,12 +15,18 @@ final class SplashViewController: UIViewController {
     // MARK: - Private Properties
     private let storage = OAuth2TokenStorage.shared
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
-    private let OAuthService = OAuth2Service()
+    private let oAuthService = OAuth2Service.shared
     private var profileService = ProfileService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        setupView()
+        setupAuthorization()
+    }
+    
+    // MARK: - Private Functions
+    
+    private func setupView() {
         view.backgroundColor = UIColor(named: "ypBlack")
         
         let imageView = UIImageView()
@@ -28,16 +34,21 @@ final class SplashViewController: UIViewController {
         imageView.tintColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
-        imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-        imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 75).isActive = true
-        imageView.heightAnchor.constraint(equalToConstant: 77).isActive = true
-        self.splashImage = imageView
         
+        NSLayoutConstraint.activate([
+            imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 75),
+            imageView.heightAnchor.constraint(equalToConstant: 77)
+        ])
+        
+        self.splashImage = imageView
+    }
+    
+    private func setupAuthorization() {
         if let token = storage.getToken() {
             fetchProfile(token)
         } else {
-            //performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
                 fatalError("AuthViewController is not found")
@@ -49,7 +60,6 @@ final class SplashViewController: UIViewController {
         }
     }
     
-    // MARK: - Private Functions
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
