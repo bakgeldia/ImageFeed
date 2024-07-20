@@ -13,7 +13,7 @@ final class OAuth2TokenStorage {
     
     private init() {}
     
-    private let tokenKey = "access_token_11"
+    private let tokenKey = "access_token_14"
     
     func saveToken(_ token: String){
         KeychainWrapper.standard.set(token, forKey: tokenKey)

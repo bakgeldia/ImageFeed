@@ -76,6 +76,8 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setUpUIElements() {
+        view.backgroundColor = UIColor(named: "ypBlack")
+        
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
