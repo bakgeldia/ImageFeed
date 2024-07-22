@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 final class ImagesListViewController: UIViewController {
-
+    
     // MARK: - IBOutlet
     @IBOutlet private var tableView: UITableView!
     
@@ -48,18 +48,12 @@ final class ImagesListViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
-            guard
-                let viewController = segue.destination as? SingleImageViewController,
-                let indexPath = sender as? IndexPath
-            else {
-                assertionFailure("Invalid segue destination")
-                return
+            if let viewController = segue.destination as? SingleImageViewController,
+               let indexPath = sender as? IndexPath {
+                viewController.largeImageURL = photos[indexPath.row].largeImageURL
+            } else {
+                super.prepare(for: segue, sender: sender)
             }
-            
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
-        } else {
-            super.prepare(for: segue, sender: sender)
         }
     }
     
@@ -91,7 +85,8 @@ extension ImagesListViewController: UITableViewDataSource {
         ) as? ImagesListCell else {
             return UITableViewCell()
         }
-
+        
+        imageListCell.delegate = self
         configCell(for: imageListCell, with: indexPath)
 
         return imageListCell
@@ -103,7 +98,6 @@ extension ImagesListViewController {
 //        guard let image = UIImage(named: photosName[indexPath.row]) else {
 //            return
 //        }
-        
         let photo = photos[indexPath.row]
         guard let url = URL(string: photo.thumbImageURL) else { return }
         
@@ -119,8 +113,8 @@ extension ImagesListViewController {
         //cell.cellImage.image = photo
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
 
-        let isLiked = indexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "like_button_on") : UIImage(named: "like_button_off")
+        //let isLiked = indexPath.row % 2 == 0
+        let likeImage = UIImage(named: self.photos[indexPath.row].isLiked ? "like_button_on" : "like_button_off")
         cell.likeButton.setImage(likeImage, for: .normal)
     }
     
@@ -150,6 +144,51 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
+    }
+}
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(photoId: "\(photo.id)", isLike: photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let like):
+                setIsLiked(cell, like)
+                
+                UIBlockingProgressHUD.dismiss()
+                print("[ImagesListViewController: imageListCellDidTapLike]: Like for image changed. Image id: \(photo.id)")
+            case .failure(let error):
+                print("[ImagesListViewController: imageListCellDidTapLike]: Error like image.\(error)")
+                UIBlockingProgressHUD.dismiss()
+                let alertController = UIAlertController(
+                    title: "Что-то пошло не так(",
+                    message: "Не удалось поставить/убрать лайк",
+                    preferredStyle: .alert
+                )
+                
+                let okAction = UIAlertAction(
+                    title: "Ok",
+                    style: .default,
+                    handler: nil
+                )
+                
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func setIsLiked(_ cell: ImagesListCell, _ like: Bool) {
+        guard let image = UIImage(named: like ? "like_button_on" : "like_button_off") else {
+            return
+        }
+        cell.likeButton.setImage(image, for: .normal)
+        //cell.likeButton.setImage(UIImage(named: like ? "like_button_on" : "like_button_off"), for: .normal)
     }
 }
 

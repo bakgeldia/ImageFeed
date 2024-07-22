@@ -17,6 +17,7 @@ final class ImagesListService {
     
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
+    private var likeTask: URLSessionTask?
     private let tokenStorage = OAuth2TokenStorage.shared
     private let stringToDateFormatter = ISO8601DateFormatter()
     
@@ -57,7 +58,6 @@ final class ImagesListService {
                         isLiked: photo.likedByUser)
                     
                     newPhotos.append(newPhoto)
-                    print(newPhoto)
                 }
                 
                 DispatchQueue.main.async {
@@ -93,4 +93,64 @@ final class ImagesListService {
         return request
     }
     
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Bool, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        
+        likeTask?.cancel()
+        
+        guard let request = makeLikePhotoRequest(url: "\(baseURL)/photos/\(photoId)/like", httpMethod: isLike ? "DELETE" : "POST")
+        else {
+            print("[ImagesListService: changeLike]: Error while creating request")
+            return
+        }
+        
+        let urlSession = URLSession.shared
+        let likeTask = urlSession.objectTask(for: request) { [weak self] (result: Result<LikedPhotoResult, Error>) in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+                self.likeTask = nil
+                var liked = false
+                switch result {
+                case .success(_):
+                    if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                        self.photos[index].isLiked = !self.photos[index].isLiked
+                        liked =  self.photos[index].isLiked
+                    }
+//                        let photo = self.photos[index]
+//                        let newPhoto = Photo(
+//                                    id: photo.id,
+//                                    size: photo.size,
+//                                    createdAt: photo.createdAt,
+//                                    welcomeDescription: photo.welcomeDescription,
+//                                    thumbImageURL: photo.thumbImageURL,
+//                                    largeImageURL: photo.largeImageURL,
+//                                    isLiked: !photo.isLiked
+//                                )
+//                        self.photos[index] = newPhoto
+//                    }
+                    
+                    completion(.success(liked))
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+        
+        self.likeTask = likeTask
+        likeTask.resume()
+    }
+    
+    func makeLikePhotoRequest(url: String, httpMethod: String) -> URLRequest? {
+        
+        guard let url = URL(string: url) else { return nil }
+        guard let token = tokenStorage.getToken() else { return nil }
+        print("Using token: \(token)")
+        
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = httpMethod
+        return request
+    }
 }

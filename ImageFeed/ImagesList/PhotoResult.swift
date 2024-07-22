@@ -14,7 +14,7 @@ struct PhotoResult: Decodable {
     let createdAt: String?
     let description: String?
     let urls: UrlsResult
-    let likedByUser: Bool
+    var likedByUser: Bool
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -25,4 +25,8 @@ struct PhotoResult: Decodable {
         case urls
         case likedByUser = "liked_by_user"
     }
+}
+
+struct LikedPhotoResult: Decodable {
+    let photo: PhotoResult
 }
