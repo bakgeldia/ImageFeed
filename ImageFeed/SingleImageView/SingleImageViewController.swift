@@ -31,11 +31,6 @@ final class SingleImageViewController: UIViewController {
         super.viewDidLoad()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-
-        //guard let image else { return }
-        //imageView.image = image
-        //imageView.frame.size = image.size
-        //rescaleAndCenterImageInScrollView(image: image)
         
         setImage()
     }
@@ -92,7 +87,7 @@ final class SingleImageViewController: UIViewController {
                 case .success(let imageData):
                     guard let image = self.imageView.image else { return }
                     self.image = image
-                    self.imageView.frame.size = image.size
+                    //self.imageView.frame.size = image.size
                     self.rescaleAndCenterImageInScrollView(image: imageData.image)
                 case .failure(let error):
                     print("[SingleImageViewController: largeImageURL]: Error while loading image.\(error)")

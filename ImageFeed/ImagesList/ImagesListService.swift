@@ -142,7 +142,7 @@ final class ImagesListService {
         likeTask.resume()
     }
     
-    func makeLikePhotoRequest(url: String, httpMethod: String) -> URLRequest? {
+    private func makeLikePhotoRequest(url: String, httpMethod: String) -> URLRequest? {
         
         guard let url = URL(string: url) else { return nil }
         guard let token = tokenStorage.getToken() else { return nil }
@@ -152,5 +152,10 @@ final class ImagesListService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = httpMethod
         return request
+    }
+    
+    func cleanPhotos() {
+        lastLoadedPage = nil
+        photos.removeAll()
     }
 }

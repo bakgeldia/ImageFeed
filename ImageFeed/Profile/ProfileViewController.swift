@@ -54,9 +54,7 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - IBAction
-    @IBAction private func didTapLogoutButton() {
-        //TODO: Need to write
-    }
+    @IBAction private func didTapLogoutButton() {}
     
     // MARK: - Private Methods
     @objc
@@ -73,6 +71,7 @@ final class ProfileViewController: UIViewController {
         profileImageView?.image = UIImage(named: "placeholder")
         profileImageView?.tintColor = .gray
         
+        ProfileLogoutService.shared.logout()
     }
     
     private func setUpUIElements() {

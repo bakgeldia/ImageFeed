@@ -15,7 +15,8 @@ final class ProfileService {
     private enum ProfileServiceErrors: Error {
         case invalidRequest
     }
-    
+        
+    private var profile: Profile?
     private var task: URLSessionTask?
     private let tokenStorage = OAuth2TokenStorage.shared
     
@@ -61,7 +62,7 @@ final class ProfileService {
                         loginName: "@\(data.username)",
                         bio: data.bio ?? "No description"
                     )
-                    
+                    self.profile = profile
                     completion(.success(profile))
                 }
             case .failure(let error):
@@ -74,5 +75,13 @@ final class ProfileService {
         
         self.task = task
         task.resume()
+    }
+    
+    func cleanProfile() {
+        profile = Profile (username: "",
+                           name: "",
+                           loginName: "",
+                           bio: ""
+        )
     }
 }
