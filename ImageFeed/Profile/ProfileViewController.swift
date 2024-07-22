@@ -59,17 +59,6 @@ final class ProfileViewController: UIViewController {
     // MARK: - Private Methods
     @objc
     private func didTapButton() {
-//        labelName?.removeFromSuperview()
-//        labelName = nil
-//        
-//        labelUsername?.removeFromSuperview()
-//        labelUsername = nil
-//        
-//        labelDescription?.removeFromSuperview()
-//        labelDescription = nil
-//        
-//        profileImageView?.image = UIImage(named: "placeholder")
-//        profileImageView?.tintColor = .gray
         let alert = UIAlertController(title: "Выход из аккаунта",
                                       message: "Вы уверены, что хотите выйти?",
                                       preferredStyle: .alert)
@@ -82,7 +71,6 @@ final class ProfileViewController: UIViewController {
         alert.addAction(confirmAction)
         
         self.present(alert, animated: true, completion: nil)
-        
     }
     
     private func setUpUIElements() {

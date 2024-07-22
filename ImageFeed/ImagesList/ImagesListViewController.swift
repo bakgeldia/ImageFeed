@@ -15,7 +15,6 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - Private Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    //private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
     private var imagesListServiceObserver: NSObjectProtocol?
@@ -95,9 +94,6 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-//        guard let image = UIImage(named: photosName[indexPath.row]) else {
-//            return
-//        }
         let photo = photos[indexPath.row]
         guard let url = URL(string: photo.thumbImageURL) else { return }
         
@@ -109,11 +105,8 @@ extension ImagesListViewController {
             self?.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
         
-        
-        //cell.cellImage.image = photo
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
 
-        //let isLiked = indexPath.row % 2 == 0
         let likeImage = UIImage(named: self.photos[indexPath.row].isLiked ? "like_button_on" : "like_button_off")
         cell.likeButton.setImage(likeImage, for: .normal)
     }
@@ -129,10 +122,6 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard self.photos.count > 0 else { return 0 }
-        
-//        guard let image = UIImage(named: photosName[indexPath.row]) else {
-//            return 0
-//        }
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
@@ -188,7 +177,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
             return
         }
         cell.likeButton.setImage(image, for: .normal)
-        //cell.likeButton.setImage(UIImage(named: like ? "like_button_on" : "like_button_off"), for: .normal)
     }
 }
 

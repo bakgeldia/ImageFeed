@@ -117,22 +117,11 @@ final class ImagesListService {
                         self.photos[index].isLiked = !self.photos[index].isLiked
                         liked =  self.photos[index].isLiked
                     }
-//                        let photo = self.photos[index]
-//                        let newPhoto = Photo(
-//                                    id: photo.id,
-//                                    size: photo.size,
-//                                    createdAt: photo.createdAt,
-//                                    welcomeDescription: photo.welcomeDescription,
-//                                    thumbImageURL: photo.thumbImageURL,
-//                                    largeImageURL: photo.largeImageURL,
-//                                    isLiked: !photo.isLiked
-//                                )
-//                        self.photos[index] = newPhoto
-//                    }
                     
                     completion(.success(liked))
                     
                 case .failure(let error):
+                    print("[ImagesListService: changeLike]: Error changing isLiked parameter for photo - \(error)")
                     completion(.failure(error))
                 }
             }
