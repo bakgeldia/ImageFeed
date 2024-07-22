@@ -12,7 +12,7 @@ final class ImagesListService {
     
     private init() {}
     
-    static let updatedPhotoList = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     private (set) var photos: [Photo] = []
     
     private var lastLoadedPage: Int?
@@ -21,6 +21,7 @@ final class ImagesListService {
     private let stringToDateFormatter = ISO8601DateFormatter()
     
     private let photosPerPage = 10
+    private let baseURL = "https://api.unsplash.com"
     
     private enum ImagesListServiceErrors: Error {
         case invalidRequest
@@ -44,7 +45,7 @@ final class ImagesListService {
             
             switch result {
             case .success(let list):
-                let newPhotos: [Photo] = []
+                var newPhotos: [Photo] = []
                 for photo in list {
                     let newPhoto = Photo(
                         id: photo.id,
@@ -55,19 +56,20 @@ final class ImagesListService {
                         largeImageURL: photo.urls.full,
                         isLiked: photo.likedByUser)
                     
-                    DispatchQueue.main.async {
-                        self.photos.append(newPhoto)
-                    }
-                    
-                    NotificationCenter.default.post(
-                        name: ImagesListService.updatedPhotoList,
-                        object: self,
-                        userInfo: ["New photo ID": newPhoto.id]
-                    )
+                    newPhotos.append(newPhoto)
+                    print(newPhoto)
                 }
                 
-                self.lastLoadedPage = nextPage
-                print("[ImagesListService: fetchPhotosNextPage]: Images successfully loaded")
+                DispatchQueue.main.async {
+                    self.photos.append(contentsOf: newPhotos)
+                    self.lastLoadedPage = nextPage
+                    NotificationCenter.default.post(
+                        name: ImagesListService.didChangeNotification,
+                        object: self,
+                        userInfo: ["New photo IDs": newPhotos.map { $0.id }]
+                    )
+                    print("[ImagesListService: fetchPhotosNextPage]: Images successfully loaded")
+                }
                 
             case .failure(let error):
                 print("[ImagesListService: fetchPhotosNextPage]: Network error - \(error)")
@@ -81,20 +83,14 @@ final class ImagesListService {
     }
     
     func makeRequest(_ page: Int) -> URLRequest? {
-        guard var urlComponents = URLComponents(string: "https://api.unsplash.com/photos") else {
-            return nil
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "page", value: "\(page)"),
-            URLQueryItem(name: "per_page", value: "\(self.photosPerPage)")
-        ]
-        
-        guard let url = urlComponents.url else { return nil}
+        guard let url = URL(string: baseURL + "/photos?page=\(page)&per_page=\(self.photosPerPage)"),
+              let token = tokenStorage.getToken() else { return nil }
         
         var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         
         return request
     }
+    
 }
