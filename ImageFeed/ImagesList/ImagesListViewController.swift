@@ -15,7 +15,7 @@ final class ImagesListViewController: UIViewController {
     
     // MARK: - Private Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    //private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
     private var imagesListServiceObserver: NSObjectProtocol?
