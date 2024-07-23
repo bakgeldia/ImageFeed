@@ -9,11 +9,9 @@ import Foundation
 
 final class ImagesListService {
     static let shared = ImagesListService()
-    
-    private init() {}
-    
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
-    private (set) var photos: [Photo] = []
+    
+    private (set) var photos = [Photo]()
     
     private var lastLoadedPage: Int?
     private var task: URLSessionTask?
@@ -22,11 +20,13 @@ final class ImagesListService {
     private let stringToDateFormatter = ISO8601DateFormatter()
     
     private let photosPerPage = 10
-    private let baseURL = "https://api.unsplash.com"
+    //private let baseURL = "https://api.unsplash.com"
     
     private enum ImagesListServiceErrors: Error {
         case invalidRequest
     }
+    
+    private init() {}
     
     func fetchPhotosNextPage(_ username: String, completion: @escaping () -> Void) {
         assert(Thread.isMainThread)
@@ -82,23 +82,12 @@ final class ImagesListService {
         task.resume()
     }
     
-    func makeRequest(_ page: Int) -> URLRequest? {
-        guard let url = URL(string: baseURL + "/photos?page=\(page)&per_page=\(self.photosPerPage)"),
-              let token = tokenStorage.getToken() else { return nil }
-        
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
-        
-        return request
-    }
-    
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Bool, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         likeTask?.cancel()
         
-        guard let request = makeLikePhotoRequest(url: "\(baseURL)/photos/\(photoId)/like", httpMethod: isLike ? "DELETE" : "POST")
+        guard let request = makeLikePhotoRequest(url: "\(Constants.baseURL)/photos/\(photoId)/like", httpMethod: isLike ? "DELETE" : "POST")
         else {
             print("[ImagesListService: changeLike]: Error while creating request")
             return
@@ -129,6 +118,17 @@ final class ImagesListService {
         
         self.likeTask = likeTask
         likeTask.resume()
+    }
+    
+    private func makeRequest(_ page: Int) -> URLRequest? {
+        guard let url = URL(string: Constants.baseURL + "/photos?page=\(page)&per_page=\(self.photosPerPage)"),
+              let token = tokenStorage.getToken() else { return nil }
+        
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        
+        return request
     }
     
     private func makeLikePhotoRequest(url: String, httpMethod: String) -> URLRequest? {

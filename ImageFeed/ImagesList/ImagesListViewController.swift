@@ -107,7 +107,7 @@ extension ImagesListViewController {
         
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
 
-        let likeImage = UIImage(named: self.photos[indexPath.row].isLiked ? "like_button_on" : "like_button_off")
+        let likeImage = UIImage(named: photo.isLiked ? "like_button_on" : "like_button_off")
         cell.likeButton.setImage(likeImage, for: .normal)
     }
     
@@ -123,11 +123,12 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard self.photos.count > 0 else { return 0 }
         
+        let photo = photos[indexPath.row]
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
-        let imageWidth = photos[indexPath.row].size.width
+        let imageWidth = photo.size.width
         let scale = imageViewWidth / imageWidth
-        let cellHeight = photos[indexPath.row].size.height * scale + imageInsets.top + imageInsets.bottom
+        let cellHeight = photo.size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
     }
     
