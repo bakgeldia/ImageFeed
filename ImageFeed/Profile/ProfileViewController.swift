@@ -59,16 +59,18 @@ final class ProfileViewController: UIViewController {
     // MARK: - Private Methods
     @objc
     private func didTapButton() {
-        let alert = UIAlertController(title: "Выход из аккаунта",
-                                      message: "Вы уверены, что хотите выйти?",
+        let alert = UIAlertController(title: "Пока, пока!",
+                                      message: "Уверены что хотите выйти?",
                                       preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-        let confirmAction = UIAlertAction(title: "Выйти", style: .destructive) { _ in
+        let confirmAction = UIAlertAction(title: "Да", style: .default) { _ in
             ProfileLogoutService.shared.logout()
         }
+        let cancelAction = UIAlertAction(title: "Нет", style: .default) { _ in
+            alert.dismiss(animated: true)
+        }
         
-        alert.addAction(cancelAction)
         alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
         
         self.present(alert, animated: true, completion: nil)
     }
