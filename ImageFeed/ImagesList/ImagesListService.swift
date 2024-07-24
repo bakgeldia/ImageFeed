@@ -20,7 +20,6 @@ final class ImagesListService {
     private let stringToDateFormatter = ISO8601DateFormatter()
     
     private let photosPerPage = 10
-    //private let baseURL = "https://api.unsplash.com"
     
     private enum ImagesListServiceErrors: Error {
         case invalidRequest

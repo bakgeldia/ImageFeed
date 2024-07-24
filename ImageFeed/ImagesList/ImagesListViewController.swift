@@ -101,9 +101,7 @@ extension ImagesListViewController {
         cell.cellImage.kf.setImage(
             with: url,
             placeholder: UIImage(named: "Stub")
-        ) { [weak self] _ in
-            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-        }
+        ) 
         
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
 
