@@ -103,7 +103,7 @@ final class ImagesListService {
                 case .success(_):
                     if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
                         self.photos[index].isLiked = !self.photos[index].isLiked
-                        liked =  self.photos[index].isLiked
+                        liked = self.photos[index].isLiked
                     }
                     
                     completion(.success(liked))
