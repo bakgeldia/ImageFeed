@@ -54,25 +54,25 @@ final class ProfileViewController: UIViewController {
     }
     
     // MARK: - IBAction
-    @IBAction private func didTapLogoutButton() {
-        //TODO: Need to write
-    }
+    @IBAction private func didTapLogoutButton() {}
     
     // MARK: - Private Methods
     @objc
     private func didTapButton() {
-        labelName?.removeFromSuperview()
-        labelName = nil
+        let alert = UIAlertController(title: "Пока, пока!",
+                                      message: "Уверены что хотите выйти?",
+                                      preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "Да", style: .default) { _ in
+            ProfileLogoutService.shared.logout()
+        }
+        let cancelAction = UIAlertAction(title: "Нет", style: .default) { _ in
+            alert.dismiss(animated: true)
+        }
         
-        labelUsername?.removeFromSuperview()
-        labelUsername = nil
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
         
-        labelDescription?.removeFromSuperview()
-        labelDescription = nil
-        
-        profileImageView?.image = UIImage(named: "placeholder")
-        profileImageView?.tintColor = .gray
-        
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func setUpUIElements() {
