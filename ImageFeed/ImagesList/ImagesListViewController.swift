@@ -25,7 +25,6 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
-    private var imagesListServiceObserver: NSObjectProtocol?
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -37,18 +36,6 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        
-//        imagesListServiceObserver = NotificationCenter.default.addObserver(
-//            forName: ImagesListService.didChangeNotification,
-//            object: nil,
-//            queue: .main
-//        ) {[weak self] _ in
-//            self?.updateTableViewAnimated()
-//        }
-//        
-//        imagesListService.fetchPhotosNextPage("") { [weak self] in
-//            self?.tableView.reloadData()
-//        }
         
         presenter?.viewDidLoad()
     }
@@ -145,7 +132,6 @@ extension ImagesListViewController {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == photos.count - 1 {
-            //imagesListService.fetchPhotosNextPage("") {}
             presenter?.fetchNextPage()
         }
     }

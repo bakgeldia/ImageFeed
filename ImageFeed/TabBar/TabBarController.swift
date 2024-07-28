@@ -16,8 +16,6 @@ final class TabBarController: UITabBarController {
         else { return }
         
         let imagesListPresenter = ImagesListPresenter()
-//        imagesListViewController.presenter = imagesListPresenter
-//        imagesListPresenter.view = imagesListViewController
         imagesListViewController.configure(imagesListPresenter)
     
         
@@ -29,8 +27,6 @@ final class TabBarController: UITabBarController {
         
         let profileViewPresenter = ProfilePresenter()
         let profileViewController = ProfileViewController()
-//        profileViewController.presenter = profileViewPresenter
-//        profileViewPresenter.view = profileViewController
         profileViewController.configure(profileViewPresenter)
         
         profileViewController.tabBarItem = UITabBarItem(

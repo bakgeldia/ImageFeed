@@ -44,22 +44,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpUIElements()
-        
-//        profileImageServiceObserver = NotificationCenter.default
-//            .addObserver(
-//                forName: ProfileImageService.didChangeNotification,
-//                object: nil,
-//                queue: .main
-//            ) { [weak self] _ in
-//                guard let self = self else { return }
-////                self.updateAvatar()
-//                presenter?.updateAvatar()
-//            }
-        
-        //updateProfileDetails()
-        //updateAvatar()
         presenter?.viewDidLoad()
     }
     
@@ -165,39 +150,5 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24).isActive = true
         button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
     }
-    
-//    private func updateAvatar() {
-//        guard
-//            let profileImageURL = ProfileImageService.shared.avatarURL,
-//            let url = URL(string: profileImageURL)
-//        else { return }
-//        let cache = ImageCache.default
-//        cache.clearMemoryCache()
-//        cache.clearDiskCache()
-//        
-//        let processor = RoundCornerImageProcessor(cornerRadius: 50)
-//        imageView.kf.indicatorType = .activity
-//        imageView.kf.setImage(with: url,
-//                              placeholder: UIImage(named: "placeholder"),
-//                              options: [ .processor(processor)]
-//        )
-//        self.profileImageView = imageView
-//    }
-    
-//    private func updateProfileDetails() {
-//        guard let token = tokenStorage.getToken() else { return }
-//        profileService.fetchProfile(token) { [weak self] result in
-//            guard let self = self else { return }
-//            switch result {
-//            case .success(let profile):
-//                name.text = profile.name
-//                username.text = profile.loginName
-//                profileDescription.text = profile.bio
-//
-//            case .failure(let error):
-//                print("Error fetching token: \(error)")
-//            }
-//        }
-//    }
     
 }
