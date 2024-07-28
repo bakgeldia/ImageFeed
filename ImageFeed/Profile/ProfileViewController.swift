@@ -87,6 +87,8 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         let confirmAction = UIAlertAction(title: "Да", style: .default) { _ in
             ProfileLogoutService.shared.logout()
         }
+        confirmAction.setValue("Yes", forKey: "accessibilityIdentifier")
+        
         let cancelAction = UIAlertAction(title: "Нет", style: .default) { _ in
             alert.dismiss(animated: true)
         }
@@ -142,6 +144,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
             target: self,
             action: #selector(Self.didTapButton)
         )
+        button.accessibilityIdentifier = "logout_button"
         button.tintColor = UIColor(red: 245.0/255.0, green: 107.0/255.0, blue: 108.0/255.0, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)

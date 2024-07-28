@@ -13,6 +13,9 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
+    
+    @IBOutlet private var loginButton: UIButton!
+    
     // MARK: - Private Properties
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oAuthService = OAuth2Service.shared

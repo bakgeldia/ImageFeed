@@ -59,6 +59,7 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sdE-8c-JJO" userLabel="Like Button">
                                                     <rect key="frame" x="354" y="4" width="44" height="44"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="like_button"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="TdL-nv-CnJ"/>
                                                         <constraint firstAttribute="width" constant="44" id="ldh-lZ-Nav"/>
@@ -158,6 +159,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNd-mo-d13" userLabel="back_button">
                                 <rect key="frame" x="8" y="8" width="48" height="48"/>
+                                <accessibility key="accessibilityConfiguration" identifier="nav_button_back"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="TBA-IY-uu8"/>
                                     <constraint firstAttribute="height" constant="48" id="hmt-hf-Jj6"/>
@@ -211,6 +213,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vev-lR-Vca">
                                 <rect key="frame" x="16" y="724" width="382" height="48"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Wsp-Sd-nKc"/>
                                 </constraints>
@@ -239,6 +242,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="kpx-XK-sWE"/>
+                    <connections>
+                        <outlet property="loginButton" destination="vev-lR-Vca" id="2qm-Dt-agz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eYc-ep-bha" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
