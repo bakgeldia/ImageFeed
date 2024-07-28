@@ -16,7 +16,7 @@ final class ProfileImageService {
     
     private init() {}
     
-    private (set) var avatarURL: String?
+    var avatarURL: String?
     
     private enum ProfileImageServiceErrors: Error {
         case invalidRequest

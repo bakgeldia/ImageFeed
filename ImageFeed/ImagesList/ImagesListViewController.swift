@@ -23,7 +23,7 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     
     // MARK: - Private Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private var photos: [Photo] = []
+    var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
     
     private lazy var dateFormatter: DateFormatter = {
@@ -188,3 +188,8 @@ extension ImagesListViewController: ImagesListCellDelegate {
     }
 }
 
+extension ImagesListViewController {
+    func setTableView(_ tableView: UITableView) {
+        self.tableView = tableView
+    }
+}

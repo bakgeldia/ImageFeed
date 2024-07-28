@@ -31,10 +31,10 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     private var labelDescription: UILabel?
     private var profileImageView: UIImageView?
     
-    private var imageView = UIImageView()
-    private var name = UILabel()
-    private var username = UILabel()
-    private var profileDescription = UILabel()
+    var imageView = UIImageView()
+    var name = UILabel()
+    var username = UILabel()
+    var profileDescription = UILabel()
     private var button = UIButton()
     
     private var profileService = ProfileService.shared
