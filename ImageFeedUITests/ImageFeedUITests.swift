@@ -78,12 +78,14 @@ final class ImageFeedUITests: XCTestCase {
         // Подождать, пока картинка открывается на весь экран
         let imageView = app.scrollViews.images.element(boundBy: 0)
         XCTAssertTrue(imageView.waitForExistence(timeout: 5), "Image did not load in time")
+        sleep(3)
         
         // Увеличить картинку
         imageView.pinch(withScale: 3, velocity: 1)
-        
+        sleep(1)
         // Уменьшить картинку
         imageView.pinch(withScale: 0.5, velocity: -1)
+        sleep(1)
         
         // Вернуться на экран ленты
         let navBackButtonWhiteButton = app.buttons["nav_button_back"]
