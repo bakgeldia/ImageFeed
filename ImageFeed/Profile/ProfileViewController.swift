@@ -8,7 +8,13 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func displayProfileDetails(name: String, username: String, description: String)
+    func displayAvatar(imageURL: String)
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     
     // MARK: - IBOutlet
     @IBOutlet private var avatarImageView: UIImageView!
@@ -16,6 +22,8 @@ final class ProfileViewController: UIViewController {
     @IBOutlet private var loginNameLabel: UILabel!
     @IBOutlet private var descriptionLabel: UILabel!
     @IBOutlet private var logoutButton: UIButton!
+    
+    var presenter: ProfilePresenterProtocol?
     
     // MARK: - Private Properties
     private var labelName: UILabel?
@@ -39,22 +47,51 @@ final class ProfileViewController: UIViewController {
         
         setUpUIElements()
         
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
+//        profileImageServiceObserver = NotificationCenter.default
+//            .addObserver(
+//                forName: ProfileImageService.didChangeNotification,
+//                object: nil,
+//                queue: .main
+//            ) { [weak self] _ in
+//                guard let self = self else { return }
+////                self.updateAvatar()
+//                presenter?.updateAvatar()
+//            }
         
-        updateProfileDetails()
-        updateAvatar()
+        //updateProfileDetails()
+        //updateAvatar()
+        presenter?.viewDidLoad()
     }
     
     // MARK: - IBAction
     @IBAction private func didTapLogoutButton() {}
+    
+    func configure(_ presenter: ProfilePresenter) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
+    
+    func displayProfileDetails(name: String, username: String, description: String) {
+        self.name.text = name
+        self.username.text = username
+        self.profileDescription.text = description
+    }
+    
+    func displayAvatar(imageURL: String) {
+        guard let url = URL(string: imageURL) else { return }
+        
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 50)
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: url,
+                              placeholder: UIImage(named: "placeholder"),
+                              options: [ .processor(processor)]
+        )
+        self.profileImageView = imageView
+    }
     
     // MARK: - Private Methods
     @objc
@@ -129,38 +166,38 @@ final class ProfileViewController: UIViewController {
         button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        let cache = ImageCache.default
-        cache.clearMemoryCache()
-        cache.clearDiskCache()
-        
-        let processor = RoundCornerImageProcessor(cornerRadius: 50)
-        imageView.kf.indicatorType = .activity
-        imageView.kf.setImage(with: url,
-                              placeholder: UIImage(named: "placeholder"),
-                              options: [ .processor(processor)]
-        )
-        self.profileImageView = imageView
-    }
+//    private func updateAvatar() {
+//        guard
+//            let profileImageURL = ProfileImageService.shared.avatarURL,
+//            let url = URL(string: profileImageURL)
+//        else { return }
+//        let cache = ImageCache.default
+//        cache.clearMemoryCache()
+//        cache.clearDiskCache()
+//        
+//        let processor = RoundCornerImageProcessor(cornerRadius: 50)
+//        imageView.kf.indicatorType = .activity
+//        imageView.kf.setImage(with: url,
+//                              placeholder: UIImage(named: "placeholder"),
+//                              options: [ .processor(processor)]
+//        )
+//        self.profileImageView = imageView
+//    }
     
-    private func updateProfileDetails() {
-        guard let token = tokenStorage.getToken() else { return }
-        profileService.fetchProfile(token) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let profile):
-                name.text = profile.name
-                username.text = profile.loginName
-                profileDescription.text = profile.bio
-
-            case .failure(let error):
-                print("Error fetching token: \(error)")
-            }
-        }
-    }
+//    private func updateProfileDetails() {
+//        guard let token = tokenStorage.getToken() else { return }
+//        profileService.fetchProfile(token) { [weak self] result in
+//            guard let self = self else { return }
+//            switch result {
+//            case .success(let profile):
+//                name.text = profile.name
+//                username.text = profile.loginName
+//                profileDescription.text = profile.bio
+//
+//            case .failure(let error):
+//                print("Error fetching token: \(error)")
+//            }
+//        }
+//    }
     
 }
