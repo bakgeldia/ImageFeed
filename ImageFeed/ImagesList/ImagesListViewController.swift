@@ -8,16 +8,23 @@
 import UIKit
 import Kingfisher
 
-final class ImagesListViewController: UIViewController {
+public protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get set }
+    func updateTableViewAnimated()
+    func updateTableView()
+}
+
+final class ImagesListViewController: UIViewController & ImagesListViewControllerProtocol {
     
     // MARK: - IBOutlet
     @IBOutlet private var tableView: UITableView!
     
+    var presenter: ImagesListPresenterProtocol?
+    
     // MARK: - Private Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    private var photos: [Photo] = []
+    var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
-    private var imagesListServiceObserver: NSObjectProtocol?
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -30,17 +37,7 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
-        imagesListServiceObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) {[weak self] _ in
-            self?.updateTableViewAnimated()
-        }
-        
-        imagesListService.fetchPhotosNextPage("") { [weak self] in
-            self?.tableView.reloadData()
-        }
+        presenter?.viewDidLoad()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -52,6 +49,32 @@ final class ImagesListViewController: UIViewController {
                 super.prepare(for: segue, sender: sender)
             }
         }
+    }
+    
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
+    
+    func updateTableView() {
+        tableView.reloadData()
+    }
+    
+    func displayError() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось поставить/убрать лайк",
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: "Ok",
+            style: .default,
+            handler: nil
+        )
+        
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func updateTableViewAnimated() {
@@ -99,7 +122,7 @@ extension ImagesListViewController {
         cell.cellImage.kf.setImage(
             with: url,
             placeholder: UIImage(named: "Stub")
-        ) 
+        )
         
         cell.dateLabel.text = dateFormatter.string(from: photo.createdAt ?? Date())
 
@@ -109,7 +132,7 @@ extension ImagesListViewController {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == photos.count - 1 {
-            imagesListService.fetchPhotosNextPage("") {}
+            presenter?.fetchNextPage()
         }
     }
 }
@@ -151,20 +174,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
             case .failure(let error):
                 print("[ImagesListViewController: imageListCellDidTapLike]: Error like image.\(error)")
                 UIBlockingProgressHUD.dismiss()
-                let alertController = UIAlertController(
-                    title: "Что-то пошло не так(",
-                    message: "Не удалось поставить/убрать лайк",
-                    preferredStyle: .alert
-                )
-                
-                let okAction = UIAlertAction(
-                    title: "Ok",
-                    style: .default,
-                    handler: nil
-                )
-                
-                alertController.addAction(okAction)
-                self.present(alertController, animated: true, completion: nil)
+                displayError()
             }
         }
     }
@@ -173,7 +183,13 @@ extension ImagesListViewController: ImagesListCellDelegate {
         guard let image = UIImage(named: like ? "like_button_on" : "like_button_off") else {
             return
         }
+        
         cell.likeButton.setImage(image, for: .normal)
     }
 }
 
+extension ImagesListViewController {
+    func setTableView(_ tableView: UITableView) {
+        self.tableView = tableView
+    }
+}
